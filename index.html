@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // reducer with forEach
+        Array.prototype.reduce2 = function (reducer, initialValue) {
+            let result = initialValue;
+            this.forEach(element => {
+                result = reducer(result, element);
+            });
+            return result;
+        }
+
+        // reducer with for of
+        // Array.prototype.reduce2 = function (reducer, initialValue) {
+        //     let result = initialValue;
+        //     for(const iterator of this) {
+        //         result = reducer(result, iterator);
+        //     }
+        //     return result;
+        // }
+
+        Array.prototype.flatMap = function(mapper) {
+            let result = this.map(mapper);
+
+            //return result.reduce2((sum, next) => sum.concat(next), []);
+
+            let flatResult = [];
+            result.forEach(element => {
+                flatResult = flatResult.concat(element);
+            });
+            return flatResult;
+        }
+
+        const pipe = (...fns) => x => fns.reduce2((y, f) => f(y), x);
+
+        console.log([1,2,4].reduce2(function(sum, next){return sum+next}, 0));
+        console.log(['a','b','a'].reduce2(function(obj, elem){if(!obj[elem]) obj[elem] = 0; obj[elem] += 1; return obj}, {}));
+
+        console.log([[1,2,3],[4,5,6]].flatMap(function(element) {
+            return element.map(value => value+1);
+        }));
+
+        const result = pipe(() => "World", (v) => `Hallo ${v}`);
+        console.log(result());
+
+    </script>
+</body>
+</html>
